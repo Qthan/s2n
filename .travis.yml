@@ -58,6 +58,9 @@ matrix:
     env: TESTS=sawHMACFailure SAW=true
   #This exception is because the test isn't finished yet, remove to turn on DRBG Saw tests
   - env: TESTS=sawDRBG SAW=true
+  allow_failures:
+    - os: osx
+  fast_finish: true
 
 before_install:
   # Install GCC 6 if on OSX
