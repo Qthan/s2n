@@ -62,6 +62,9 @@ int s2n_constant_time_equals(const uint8_t * a, const uint8_t * b, uint32_t len)
     uint8_t xor = 0;
     for (int i = 0; i < len; i++) {
         xor |= a[i] ^ b[i];
+	if (xor) {
+	  return 0;
+	}
     }
 
     return !xor;
