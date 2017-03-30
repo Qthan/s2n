@@ -36,12 +36,10 @@ which smack || echo "can't find smack"
 which boogie || echo "can't find z3"
 which llvm2bpl || echo "can't find llvm2bpl"
 
-
-cd "${BASE_S2N_DIR}/tests/ctverif"
-pwd
-
 #copy the current version of the file to the test
+cd "${BASE_S2N_DIR}/tests/ctverif"
 cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
+make clean
 
 #run the test.  We expect both to pass, and none to fail
 FAILED=0
