@@ -44,6 +44,7 @@ pwd
 cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
 
 #run the test.  We expect both to pass, and none to fail
+FAILED=0
 EXPECTED_PASS=2
 EXPECTED_FAIL=0
 make | ./count_success.pl $EXPECTED_PASS $EXPECTED_FAIL || FAILED=1
