@@ -20,6 +20,7 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "s2n_annotations.h"
 
@@ -58,13 +59,14 @@ int s2n_constant_time_equals(const uint8_t * a, const uint8_t * b, uint32_t len)
     S2N_PUBLIC_INPUT(a);
     S2N_PUBLIC_INPUT(b);
     S2N_PUBLIC_INPUT(len);
-    
-    uint8_t xor = 0;
-    for (int i = 0; i < len; i++) {
-        xor |= a[i] ^ b[i];
-    }
 
-    return !xor;
+    return memcmp(a,b,len);
+    //uint8_t xor = 0;
+    //for (int i = 0; i < len; i++) {
+    //    xor |= a[i] ^ b[i];
+    //}
+    //
+    //return !xor;
 }
 
 /**
