@@ -16,6 +16,17 @@
 SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
 
+BITCODE_DIR?=../bitcode/
+
+BCS_1=$(SRCS:.c=.bc)
+BCS=$(addprefix $(BITCODE_DIR), $(BCS_1))
+
+.PHONY : bc
+bc: $(BITCODE_DIR)utils_llvm.txt
+
+$(BITCODE_DIR)utils_llvm.txt : $(BCS)
+	echo $+ > $@
+
 .PHONY : all
 all: $(OBJS)
 
