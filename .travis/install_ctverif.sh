@@ -31,6 +31,7 @@ cd $INSTALL_DIR
 #install smack
 git clone --depth 1 https://github.com/smackers/smack.git -b develop
 cd smack/bin
+git checkout d609e00
 ./build.sh
 
 source $INSTALL_DIR/smack.environment
