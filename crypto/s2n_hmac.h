@@ -40,6 +40,7 @@ struct s2n_hmac_state {
     uint8_t digest_size;
 
     struct s2n_hash_state inner;
+    struct s2n_hash_state temp_hash_copy; //used for timing balancing in s2n_hmac_digest_two_compression_rounds
     struct s2n_hash_state inner_just_key;
     struct s2n_hash_state outer;
 

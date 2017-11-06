@@ -94,11 +94,15 @@ static int s2n_sslv3_mac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm a
         hash_alg = S2N_HASH_SHA1;
     }
 
+    GUARD(s2n_hash_init(&state->inner, hash_alg));
+    GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
+    GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
+    GUARD(s2n_hash_init(&state->outer, hash_alg));
+
     for (int i = 0; i < state->xor_pad_size; i++) {
         state->xor_pad[i] = 0x36;
     }
 
-    GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
     GUARD(s2n_hash_update(&state->inner_just_key, key, klen));
     GUARD(s2n_hash_update(&state->inner_just_key, state->xor_pad, state->xor_pad_size));
 
@@ -106,7 +110,6 @@ static int s2n_sslv3_mac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm a
         state->xor_pad[i] = 0x5c;
     }
 
-    GUARD(s2n_hash_init(&state->outer, hash_alg));
     GUARD(s2n_hash_update(&state->outer, key, klen));
     GUARD(s2n_hash_update(&state->outer, state->xor_pad, state->xor_pad_size));
 
@@ -132,7 +135,9 @@ static int s2n_tls_hmac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm al
 {
     s2n_hash_algorithm hash_alg;
     GUARD(s2n_hmac_hash_alg(alg, &hash_alg));
-  
+
+    GUARD(s2n_hash_init(&state->inner, hash_alg));
+    GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
     GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
     GUARD(s2n_hash_init(&state->outer, hash_alg));
 
@@ -203,6 +208,7 @@ int s2n_hmac_hash_block_size(s2n_hmac_algorithm hmac_alg, uint16_t *block_size)
 int s2n_hmac_new(struct s2n_hmac_state *state)
 {
     GUARD(s2n_hash_new(&state->inner));
+    GUARD(s2n_hash_new(&state->temp_hash_copy));
     GUARD(s2n_hash_new(&state->inner_just_key));
     GUARD(s2n_hash_new(&state->outer));
 
@@ -282,6 +288,11 @@ int s2n_hmac_digest(struct s2n_hmac_state *state, void *out, uint32_t size)
 
 int s2n_hmac_digest_two_compression_rounds(struct s2n_hmac_state *state, void *out, uint32_t size)
 {
+    /* Make a copy of the current state of the inner hash. Once a hash is digested, it can't be used
+     * again, so we need to do the timing balancing at the end of this function on a hash copy
+     */
+    GUARD(s2n_hash_copy(&state->temp_hash_copy, &state->inner));
+
     /* Do the "real" work of this function. */
     GUARD(s2n_hmac_digest(state, out, size));
 
@@ -296,12 +307,13 @@ int s2n_hmac_digest_two_compression_rounds(struct s2n_hmac_state *state, void *o
     }
 
     /* No-op s2n_hash_update to normalize timing and guard against Lucky13. This does not affect the value of *out. */
-    return s2n_hash_update(&state->inner, state->xor_pad, state->hash_block_size);
+    return s2n_hash_update(&state->temp_hash_copy, state->xor_pad, state->hash_block_size);
 }
 
 int s2n_hmac_free(struct s2n_hmac_state *state)
 {
     GUARD(s2n_hash_free(&state->inner));
+    GUARD(s2n_hash_free(&state->temp_hash_copy));
     GUARD(s2n_hash_free(&state->inner_just_key));
     GUARD(s2n_hash_free(&state->outer));
 
@@ -332,6 +344,7 @@ int s2n_hmac_copy(struct s2n_hmac_state *to, struct s2n_hmac_state *from)
     to->digest_size = from->digest_size;
 
     GUARD(s2n_hash_copy(&to->inner, &from->inner));
+    GUARD(s2n_hash_copy(&to->temp_hash_copy, &from->inner));
     GUARD(s2n_hash_copy(&to->inner_just_key, &from->inner_just_key));
     GUARD(s2n_hash_copy(&to->outer, &from->outer));
 
