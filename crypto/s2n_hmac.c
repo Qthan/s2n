@@ -94,8 +94,8 @@ static int s2n_sslv3_mac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm a
         hash_alg = S2N_HASH_SHA1;
     }
 
-    GUARD(s2n_hash_init(&state->inner, hash_alg));
-    GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
+    //GUARD(s2n_hash_init(&state->inner, hash_alg));
+    //GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
     GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
     GUARD(s2n_hash_init(&state->outer, hash_alg));
 
@@ -136,8 +136,8 @@ static int s2n_tls_hmac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm al
     s2n_hash_algorithm hash_alg;
     GUARD(s2n_hmac_hash_alg(alg, &hash_alg));
 
-    GUARD(s2n_hash_init(&state->inner, hash_alg));
-    GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
+    //GUARD(s2n_hash_init(&state->inner, hash_alg));
+    //GUARD(s2n_hash_init(&state->temp_hash_copy, hash_alg));
     GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
     GUARD(s2n_hash_init(&state->outer, hash_alg));
 
