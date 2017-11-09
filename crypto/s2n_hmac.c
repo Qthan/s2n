@@ -107,6 +107,8 @@ static int s2n_sslv3_mac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm a
     }
 
     GUARD(s2n_hash_init(&state->outer, hash_alg));
+    GUARD(s2n_hash_init(&state->outer_just_key, hash_alg));
+
     GUARD(s2n_hash_update(&state->outer, key, klen));
     GUARD(s2n_hash_update(&state->outer, state->xor_pad, state->xor_pad_size));
 
@@ -131,6 +133,7 @@ static int s2n_tls_hmac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm al
   
     GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
     GUARD(s2n_hash_init(&state->outer, hash_alg));
+    GUARD(s2n_hash_init(&state->outer_just_key, hash_alg));
 
     uint32_t copied = klen;
     if (klen > state->xor_pad_size) {
@@ -201,6 +204,7 @@ int s2n_hmac_new(struct s2n_hmac_state *state)
     GUARD(s2n_hash_new(&state->inner));
     GUARD(s2n_hash_new(&state->inner_just_key));
     GUARD(s2n_hash_new(&state->outer));
+    GUARD(s2n_hash_new(&state->outer_just_key));
 
     return 0;
 }
@@ -303,6 +307,7 @@ int s2n_hmac_free(struct s2n_hmac_state *state)
     GUARD(s2n_hash_free(&state->inner));
     GUARD(s2n_hash_free(&state->inner_just_key));
     GUARD(s2n_hash_free(&state->outer));
+    GUARD(s2n_hash_free(&state->outer_just_key));
 
     return 0;
 }
@@ -333,6 +338,7 @@ int s2n_hmac_copy(struct s2n_hmac_state *to, struct s2n_hmac_state *from)
     GUARD(s2n_hash_copy(&to->inner, &from->inner));
     GUARD(s2n_hash_copy(&to->inner_just_key, &from->inner_just_key));
     GUARD(s2n_hash_copy(&to->outer, &from->outer));
+    GUARD(s2n_hash_copy(&to->outer_just_key, &from->outer_just_key));
 
     memcpy_check(to->xor_pad, from->xor_pad, sizeof(to->xor_pad));
     memcpy_check(to->digest_pad, from->digest_pad, sizeof(to->digest_pad));
@@ -349,6 +355,7 @@ int s2n_hmac_save_evp_hash_state(struct s2n_hmac_evp_backup* backup, struct s2n_
     backup->inner = hmac->inner.digest.high_level;
     backup->inner_just_key = hmac->inner_just_key.digest.high_level;
     backup->outer = hmac->outer.digest.high_level;
+    backup->outer_just_key = hmac->outer_just_key.digest.high_level;
     return 0;
 }
 
@@ -357,5 +364,6 @@ int s2n_hmac_restore_evp_hash_state(struct s2n_hmac_evp_backup* backup, struct s
     hmac->inner.digest.high_level = backup->inner;
     hmac->inner_just_key.digest.high_level = backup->inner_just_key;
     hmac->outer.digest.high_level = backup->outer;
+    hmac->outer_just_key.digest.high_level = backup->outer_just_key;
     return 0;
 }
