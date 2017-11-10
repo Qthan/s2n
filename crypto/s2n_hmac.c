@@ -95,7 +95,7 @@ static int s2n_sslv3_mac_init(struct s2n_hmac_state *state, s2n_hmac_algorithm a
     }
 
     for (int i = 0; i < state->xor_pad_size; i++) {
-        state->xor_pad[i] = 0x36;
+        state->xor_pad[i] = 0x31;
     }
 
     GUARD(s2n_hash_init(&state->inner_just_key, hash_alg));
