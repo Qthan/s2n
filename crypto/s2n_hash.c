@@ -587,3 +587,13 @@ int s2n_hash_free(struct s2n_hash_state *state)
 
     return state->hash_impl->free(state);
 }
+
+int s2n_hash_get_currently_in_hash(struct s2n_hash_state *state, uint64_t *out)
+{
+    if(!state->is_ready_for_input) {
+      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
+    }
+
+    *out = state->currently_in_hash;
+    return 0;
+}
