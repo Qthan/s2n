@@ -83,6 +83,8 @@ struct s2n_hash_evp_digest {
 struct s2n_hash_state {
     const struct s2n_hash *hash_impl;
     s2n_hash_algorithm alg;
+    uint8_t is_ready_for_input;
+    uint64_t currently_in_hash;
     union {
         union s2n_hash_low_level_digest low_level;
         struct s2n_hash_evp_digest high_level;
@@ -105,6 +107,7 @@ struct s2n_hash {
 
 extern int s2n_hash_digest_size(s2n_hash_algorithm alg, uint8_t *out);
 extern int s2n_hash_is_available(s2n_hash_algorithm alg);
+extern int s2n_hash_is_ready_for_input(struct s2n_hash_state *state);
 extern int s2n_hash_new(struct s2n_hash_state *state);
 extern int s2n_hash_allow_md5_for_fips(struct s2n_hash_state *state);
 extern int s2n_hash_init(struct s2n_hash_state *state, s2n_hash_algorithm alg);
