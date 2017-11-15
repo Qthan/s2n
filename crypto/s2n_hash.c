@@ -126,9 +126,7 @@ static int s2n_low_level_hash_init(struct s2n_hash_state *state, s2n_hash_algori
 
 static int s2n_low_level_hash_update(struct s2n_hash_state *state, const void *data, uint32_t size)
 {
-    if(!state->is_ready_for_input) {
-      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
-    }
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     int r;
     switch (state->alg) {
@@ -172,9 +170,7 @@ static int s2n_low_level_hash_update(struct s2n_hash_state *state, const void *d
 
 static int s2n_low_level_hash_digest(struct s2n_hash_state *state, void *out, uint32_t size)
 {
-    if(!state->is_ready_for_input) {
-      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
-    }
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     int r;
     switch (state->alg) {
@@ -310,9 +306,7 @@ static int s2n_evp_hash_init(struct s2n_hash_state *state, s2n_hash_algorithm al
 
 static int s2n_evp_hash_update(struct s2n_hash_state *state, const void *data, uint32_t size)
 {
-    if(!state->is_ready_for_input) {
-      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
-    }
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     int r;
     switch (state->alg) {
@@ -346,9 +340,7 @@ static int s2n_evp_hash_update(struct s2n_hash_state *state, const void *data, u
 
 static int s2n_evp_hash_digest(struct s2n_hash_state *state, void *out, uint32_t size)
 {
-    if(!state->is_ready_for_input) {
-      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
-    }
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     int r;
     unsigned int digest_size = size;
@@ -590,9 +582,7 @@ int s2n_hash_free(struct s2n_hash_state *state)
 
 int s2n_hash_get_currently_in_hash(struct s2n_hash_state *state, uint64_t *out)
 {
-    if(!state->is_ready_for_input) {
-      S2N_ERROR(S2N_ERR_HASH_NOT_READY);
-    }
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     *out = state->currently_in_hash;
     return 0;
