@@ -40,10 +40,10 @@ int main(int argc, char **argv)
 
     GUARD(s2n_hash_new(&hash));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     GUARD(s2n_hash_new(&copy));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
 
     if (s2n_hash_is_available(S2N_HASH_MD5)) {
         /* Try MD5 */
@@ -52,17 +52,17 @@ int main(int argc, char **argv)
         EXPECT_EQUAL(md5_digest_size, 16);
         EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_MD5));
 	EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 	EXPECT_EQUAL(bytes_in_hash, 0);
 
         EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
 	EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 	EXPECT_EQUAL(bytes_in_hash, 13);
 
         EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, MD5_DIGEST_LENGTH));
 	EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-	EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+	EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
         EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
         for (int i = 0; i < 16; i++) {
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 
         GUARD(s2n_hash_reset(&hash));
 	EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+	EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 	EXPECT_EQUAL(bytes_in_hash, 0);
     }
 
@@ -84,26 +84,26 @@ int main(int argc, char **argv)
     EXPECT_EQUAL(sha1_digest_size, 20);
     EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_SHA1));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_copy(&copy, &hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 20; i++) {
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
     /* Check the copy */
     EXPECT_SUCCESS(s2n_hash_digest(&copy, digest_pad, SHA_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 20; i++) {
@@ -128,38 +128,38 @@ int main(int argc, char **argv)
 
     EXPECT_SUCCESS(s2n_hash_reset(&hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_reset(&copy));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
 
     /* Test that a multi-update works */
     EXPECT_SUCCESS(s2n_hash_update(&hash, string1, strlen((char *)string1)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 9);
 
     EXPECT_SUCCESS(s2n_hash_copy(&copy, &hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 9);
 
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 9);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, string2, strlen((char *)string2)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 22);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 20; i++) {
@@ -172,16 +172,16 @@ int main(int argc, char **argv)
     /* Test that a copy-update works */
     EXPECT_SUCCESS(s2n_hash_update(&copy, string2, strlen((char *)string2)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 22);
 
     EXPECT_SUCCESS(s2n_hash_digest(&copy, digest_pad, SHA_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_hash_free(&copy));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&copy));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&copy, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&copy, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 20; i++) {
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 
     GUARD(s2n_hash_reset(&hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
 
@@ -203,21 +203,21 @@ int main(int argc, char **argv)
     EXPECT_EQUAL(sha224_digest_size, 28);
     EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_SHA224));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA224_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_hash_free(&hash));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 28; i++) {
@@ -230,24 +230,24 @@ int main(int argc, char **argv)
     /* Try SHA256 using a freed hash state */
     GUARD(s2n_hash_new(&hash));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     uint8_t sha256_digest_size;
     GUARD(s2n_hash_digest_size(S2N_HASH_SHA256, &sha256_digest_size));
     EXPECT_EQUAL(sha256_digest_size, 32);
     EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_SHA256));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA256_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 32; i++) {
@@ -259,7 +259,7 @@ int main(int argc, char **argv)
 
     GUARD(s2n_hash_reset(&hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
 
@@ -269,17 +269,17 @@ int main(int argc, char **argv)
     EXPECT_EQUAL(sha384_digest_size, 48);
     EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_SHA384));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA384_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 48; i++) {
@@ -291,7 +291,7 @@ int main(int argc, char **argv)
 
     GUARD(s2n_hash_reset(&hash));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
 
@@ -301,21 +301,21 @@ int main(int argc, char **argv)
     EXPECT_EQUAL(sha512_digest_size, 64);
     EXPECT_SUCCESS(s2n_hash_init(&hash, S2N_HASH_SHA512));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 0);
 
     EXPECT_SUCCESS(s2n_hash_update(&hash, hello, strlen((char *)hello)));
     EXPECT_TRUE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_SUCCESS(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
     EXPECT_EQUAL(bytes_in_hash, 13);
 
     EXPECT_SUCCESS(s2n_hash_digest(&hash, digest_pad, SHA512_DIGEST_LENGTH));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_hash_free(&hash));
     EXPECT_FALSE(s2n_hash_is_ready_for_input(&hash));
-    EXPECT_FAILURE(s2n_hash_get_currently_in_hash(&hash, &bytes_in_hash));
+    EXPECT_FAILURE(s2n_hash_get_currently_in_hash_total(&hash, &bytes_in_hash));
 
     EXPECT_SUCCESS(s2n_stuffer_init(&output, &out));
     for (int i = 0; i < 64; i++) {
