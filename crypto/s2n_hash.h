@@ -106,6 +106,7 @@ struct s2n_hash {
 };
 
 extern int s2n_hash_digest_size(s2n_hash_algorithm alg, uint8_t *out);
+extern int s2n_hash_block_size(s2n_hash_algorithm alg, uint64_t *block_size);
 extern int s2n_hash_is_available(s2n_hash_algorithm alg);
 extern int s2n_hash_is_ready_for_input(struct s2n_hash_state *state);
 extern int s2n_hash_new(struct s2n_hash_state *state);
@@ -116,4 +117,5 @@ extern int s2n_hash_digest(struct s2n_hash_state *state, void *out, uint32_t siz
 extern int s2n_hash_copy(struct s2n_hash_state *to, struct s2n_hash_state *from);
 extern int s2n_hash_reset(struct s2n_hash_state *state);
 extern int s2n_hash_free(struct s2n_hash_state *state);
-extern int s2n_hash_get_currently_in_hash(struct s2n_hash_state *state, uint64_t *out);
+extern int s2n_hash_get_currently_in_hash_total(struct s2n_hash_state *state, uint64_t *out);
+extern int s2n_hash_get_currently_in_hash_block(struct s2n_hash_state *state, uint64_t *out);

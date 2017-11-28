@@ -290,7 +290,7 @@ int s2n_hmac_reset(struct s2n_hmac_state *state)
     GUARD(s2n_hash_copy(&state->inner, &state->inner_just_key));
     
     uint64_t bytes_in_hash;
-    GUARD(s2n_hash_get_currently_in_hash(&state->inner, &bytes_in_hash));
+    GUARD(s2n_hash_get_currently_in_hash_total(&state->inner, &bytes_in_hash));
     /* The length of the key is not private, so don't need to do tricky match here */
     state->currently_in_hash_block = bytes_in_hash % state->hash_block_size;
     /* if( state->currently_in_hash_block != 0) { */

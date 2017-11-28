@@ -38,6 +38,26 @@ int s2n_hash_digest_size(s2n_hash_algorithm alg, uint8_t *out)
     return 0;
 }
 
+/* NOTE: 2n_hash_get_currently_in_hash_block takes advantage of the fact that
+ * hash_block_size is a power of 2. This is true for all hashes we currently support
+ * If this ever becomes untrue, this would require fixing*/
+int s2n_hash_block_size(s2n_hash_algorithm alg, uint64_t *block_size)
+{
+    switch(alg) {
+    case S2N_HASH_NONE:       *block_size = 64;   break;
+    case S2N_HASH_MD5:        *block_size = 64;   break;
+    case S2N_HASH_SHA1:       *block_size = 64;   break;
+    case S2N_HASH_SHA224:     *block_size = 64;   break;
+    case S2N_HASH_SHA256:     *block_size = 64;   break;
+    case S2N_HASH_SHA384:     *block_size = 128;  break;
+    case S2N_HASH_SHA512:     *block_size = 128;  break;
+    case S2N_HASH_MD5_SHA1:   *block_size = 64;   break;
+    default:
+        S2N_ERROR(S2N_ERR_HASH_INVALID_ALGORITHM);
+    }
+    return 0;
+}
+
 /* Return 1 if hash algorithm is available, 0 otherwise. */
 int s2n_hash_is_available(s2n_hash_algorithm alg)
 {
@@ -580,10 +600,24 @@ int s2n_hash_free(struct s2n_hash_state *state)
     return state->hash_impl->free(state);
 }
 
-int s2n_hash_get_currently_in_hash(struct s2n_hash_state *state, uint64_t *out)
+int s2n_hash_get_currently_in_hash_total(struct s2n_hash_state *state, uint64_t *out)
 {
     S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
 
     *out = state->currently_in_hash;
+    return 0;
+}
+
+
+/* Calculate, in constant time, the number of bytes currently in the hash_block */
+int s2n_hash_get_currently_in_hash_block(struct s2n_hash_state *state, uint64_t *out)
+{
+    S2N_ERROR_UNLESS(state->is_ready_for_input, S2N_ERR_HASH_NOT_READY);
+    uint64_t hash_block_size;
+    GUARD(s2n_hash_block_size(state->alg, &hash_block_size));
+
+    /* Requires that hash_block_size is a power of 2. This is true for all hashes we currently support
+     * If this ever becomes untrue, this would require fixing this*/
+    *out = state->currently_in_hash & (hash_block_size - 1);
     return 0;
 }
