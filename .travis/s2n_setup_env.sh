@@ -38,6 +38,7 @@
 : "${LIBRESSL_INSTALL_DIR:=$(pwd)/test-deps/libressl}"
 : "${CPPCHECK_INSTALL_DIR:=$(pwd)/test-deps/cppcheck}"
 : "${CTVERIF_INSTALL_DIR:=$(pwd)/test-deps/ctverif}"
+: "${SIDEWINDER_INSTALL_DIR:=$(pwd)/test-deps/sidewinder}"
 : "${FUZZ_TIMEOUT_SEC:=10}"
 
 # Openssl 1.1.x-master is not added to Travis cache because we want to build against the latest
