@@ -22,9 +22,9 @@ matrix:
           packages:
             - clang-3.9
             - llvm-3.9
-            - llvm-dev-3.9
-    - os : linux
-      env: TESTS=ctverif
+            - llvm-3.9-dev
+#    - os : linux
+#      env: TESTS=ctverif
 
 
   allow_failures:
