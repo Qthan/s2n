@@ -14,6 +14,7 @@
 #
 
 set -e
+set -x
 
 #Figlet is required for ctverif printing
 sudo apt-get install -y figlet
@@ -24,3 +25,6 @@ sudo gem install --pre bam-bam-boogieman
 clang --version
 clang-3.9 --version
 
+which python
+python --version
+pip install psutil
