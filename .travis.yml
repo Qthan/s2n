@@ -15,6 +15,7 @@ os:
 
 env:
   - TESTS=sidewinder
+  - TESTS=ctverif
 
 matrix:
   include:
