@@ -33,6 +33,10 @@ cd "$INSTALL_DIR"
 git clone https://github.com/smackers/smack.git -b develop
 cd smack/bin
 git checkout c292131
+
+clang --version
+which clang
+
 ./build.sh
 
 # Disabling ShellCheck using https://github.com/koalaman/shellcheck/wiki/Directive
