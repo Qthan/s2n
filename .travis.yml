@@ -24,6 +24,11 @@ matrix:
             - llvm-3.9
     - os : linux
       env: TESTS=ctverif
+      addons:
+        apt:
+          packages:
+            - clang-3.7
+            - llvm-3.7
 
 
   allow_failures:

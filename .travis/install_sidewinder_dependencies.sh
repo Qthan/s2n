@@ -26,7 +26,7 @@ sudo gem install --pre bam-bam-boogieman
 #Install the apt-get dependencies from the smack build script: this way they will still be there
 #when we get things from cache
 DEPENDENCIES="git cmake python-yaml python-psutil unzip wget python3-yaml"
-DEPENDENCIES+= " mono-complete libz-dev libedit-dev"
+DEPENDENCIES+=" mono-complete libz-dev libedit-dev"
 
 # Adding MONO repository
 sudo add-apt-repository "deb http://download.mono-project.com/repo/debian wheezy main"
@@ -34,6 +34,7 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328
 
 sudo apt-get update
 sudo apt-get install -y ${DEPENDENCIES}
+pip install pyyaml
 
 
 clang --version
