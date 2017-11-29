@@ -25,12 +25,6 @@ if [ "$#" -ne "1" ]; then
     usage
 fi
 
-echo "FOOBARBAZ"
-
-clang --version
-clang-3.9 --version
-exit 1
-
 INSTALL_DIR=$1
 export CTVERIF_DIR="${1}/verifying-constant-time"
 SMACK_DIR="${1}/smack"
@@ -46,6 +40,13 @@ export PATH="${SMACK_DIR}/bin:${SMACK_DIR}/build:${PATH}"
 which smack || echo "can't find smack"
 which boogie || echo "can't find z3"
 which llvm2bpl || echo "can't find llvm2bpl"
+
+echo "FOOBARBAZ"
+
+clang --version
+clang-3.9 --version
+exit 1
+
 
 #copy the current version of the file to the test
 cd "${BASE_S2N_DIR}/tests/ctverif"
