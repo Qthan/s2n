@@ -14,7 +14,6 @@ os:
   - linux
 
 env:
-  - TESTS=sidewinder
   - TESTS=ctverif
 
 matrix:
