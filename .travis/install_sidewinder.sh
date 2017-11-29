@@ -14,6 +14,7 @@
 #
 
 set -e
+set -x
 
 usage() {
     echo "install_ctverif.sh install_dir"
