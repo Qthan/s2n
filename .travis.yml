@@ -22,7 +22,6 @@ matrix:
           packages:
             - clang-3.9
             - llvm-3.9
-	      include:
     - os : linux
       env: TESTS=ctverif
 
