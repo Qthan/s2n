@@ -13,8 +13,6 @@ osx_image: xcode8
 os:
   - linux
 
-env:
-
 matrix:
   include:
     - os : linux
