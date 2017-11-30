@@ -23,6 +23,7 @@ sudo apt-get install -y figlet
 #sudo gem install --pre bam-bam-boogieman
 git clone https://github.com/Qthan/bam-bam-boogieman.git -b cost-modeling
 cd bam-bam-boogieman
+bundle update
 bundle exec rake install
 cd ..
 which bam
