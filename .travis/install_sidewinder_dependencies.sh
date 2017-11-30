@@ -27,8 +27,6 @@ bundle update
 bundle exec rake install
 cd ..
 which bam
-exit 1
-
 
 
 #Install the apt-get dependencies from the smack build script: this way they will still be there
@@ -43,7 +41,6 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328
 sudo apt-get update
 sudo apt-get install -y ${DEPENDENCIES}
 pip install pyyaml
-
 
 clang --version
 clang-3.9 --version
