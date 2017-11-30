@@ -20,7 +20,14 @@ set -x
 sudo apt-get install -y figlet
 
 #Install boogieman
-sudo gem install --pre bam-bam-boogieman
+#sudo gem install --pre bam-bam-boogieman
+git clone https://github.com/Qthan/bam-bam-boogieman.git -b cost-modeling
+cd bam-bam-boogieman
+bundle exec rake install
+cd ..
+which bam
+exit 1
+
 
 
 #Install the apt-get dependencies from the smack build script: this way they will still be there
