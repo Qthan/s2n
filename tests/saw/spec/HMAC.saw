@@ -53,6 +53,8 @@ let hash_state_inner pstate =
 
 let setup_hash_state pstate = do {
     alg0 <- crucible_fresh_var "alg" (llvm_int 32);
+    ready0 <- crucible_fresh_var "alg" (llvm_int 8);
+    curr0 <- crucible_fresh_var "alg" (llvm_int 64);
     h0 <- crucible_fresh_var "h" (llvm_array 8 (llvm_int 64));
     Nl0 <- crucible_fresh_var "Nl" (llvm_int 64);
     Nh0 <- crucible_fresh_var "Nh" (llvm_int 64);
@@ -64,6 +66,8 @@ let setup_hash_state pstate = do {
       (crucible_struct
         [ pimpl
         , crucible_term alg0
+	, crucible_term ready0
+	, crucible_term curr0
         , crucible_struct
           [ crucible_struct
             [ crucible_struct
