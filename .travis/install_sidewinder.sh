@@ -30,9 +30,8 @@ INSTALL_DIR=$1
 cd "$INSTALL_DIR"
 
 #install smack
-git clone https://github.com/smackers/smack.git -b develop
+git clone https://github.com/danielsn/smack.git -b sidewinder
 cd smack/bin
-git checkout c292131
 
 clang --version
 which clang
