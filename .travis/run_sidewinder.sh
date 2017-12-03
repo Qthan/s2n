@@ -44,14 +44,14 @@ which llvm2bpl || echo "can't find llvm2bpl"
 
 #copy the current version of the file to the test
 cd "${BASE_S2N_DIR}/tests/sidewinder/working/s2n-cbc"
-cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
+#cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
 make clean
 
 #run the test.  We expect both to pass, and none to fail
 FAILED=0
 EXPECTED_PASS=1
 EXPECTED_FAIL=0
-make 2>&1 | ./count_success.pl $EXPECTED_PASS $EXPECTED_FAIL || FAILED=1
+make #2>&1 | ../../count_success.pl $EXPECTED_PASS $EXPECTED_FAIL || FAILED=1
 
 if [ $FAILED == 1 ];
 then
