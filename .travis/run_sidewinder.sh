@@ -43,7 +43,6 @@ which llvm2bpl || echo "can't find llvm2bpl"
 which clang
 clang --version
 
-
 #copy the current version of the file to the test
 cd "${BASE_S2N_DIR}/tests/sidewinder/working/s2n-cbc"
 #cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
