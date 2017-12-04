@@ -13,47 +13,6 @@
 # permissions and limitations under the License.
 #
 
-#see https://gist.github.com/letmaik/caa0f6cc4375cbfcc1ff26bd4530c2a3#file-travis_retry-sh
-#and https://github.com/travis-ci/travis-build/blob/1a3f336086d4c99fc9b11337ea1ff527e2f97a72/lib/travis/build/script/templates/header.sh
-
-travis_wait() {
-  local cmd="$@"
-  local log_file=travis_wait_$$.log
-
-  $cmd 2>&1 >$log_file &
-  local cmd_pid=$!
-
-  travis_jigger $! $cmd &
-  local jigger_pid=$!
-  local result
-
-  {
-    wait $cmd_pid 2>/dev/null
-    result=$?
-    ps -p$jigger_pid 2>&1>/dev/null && kill $jigger_pid
-  } || exit 1
-
-  exit $result
-}
-
-travis_jigger() {
-  # helper method for travis_wait()
-  local timeout=20 # in minutes
-  local count=0
-
-  local cmd_pid=$1
-  shift
-
-  while [ $count -lt $timeout ]; do
-    count=$(($count + 1))
-    echo -ne "Still running ($count of $timeout): $@\r"
-    sleep 60
-  done
-
-  echo -e "\n\033[31;1mTimeout reached. Terminating $@\033[0m\n"
-  kill -9 $cmd_pid
-}
-
 set -e
 set -x
 
