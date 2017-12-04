@@ -170,8 +170,12 @@ begin
     flags << "-ll #{params[:a]}.ll"
     flags << "-bpl #{params[:a]}"
     flags << "--timing-annotations" if params[:timing]
+    puts `which clang`
+    puts `which llvm-link`
+    puts `clang --version`
+    puts `llvm-link --version`
     puts "#{flags * " "} #{params[:sources] * " "}"
-    puts `which clang; clang --version; #{echo} smack #{flags * " "} #{params[:sources] * " "}`
+    puts `#{echo} smack #{flags * " "} #{params[:sources] * " "}`
     raise "failed to compile #{params[:sources] * ", "}" unless $?.success?
     warn "warning: module contains inline assembly" \
       if File.readlines("#{params[:a]}.ll").grep(INLINE_ASM_PATTERN).any?
