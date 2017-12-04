@@ -8,4 +8,4 @@ full_self_comp += true
 smtlog += p.smt2
 shadowingArgs += "self_comp_mode=full,branchcond_assertion=assert_never,memory_assertion=assert_never"
 timing += true
-printModel += true
+#printModel += true

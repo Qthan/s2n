@@ -1,6 +1,28 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require "open3"
+require 'date'
+require 'timeout'
+
+def run_command_with_heartbeat (beat_time, cmd)
+  start = Time.now
+  line = nil
+  puts "+ #{cmd}"
+  Open3.popen3(cmd) do |stdin, stdout, stderr, thread|    
+    loop do
+      STDERR.puts "#{(Time.now - start).round} seconds"
+      begin
+        Timeout::timeout(beat_time) {line = stdout.gets}
+        break unless line
+        puts line
+      rescue Timeout::Error
+        STDERR.puts "+++++++ running for #{(Time.now - start).round} seconds"
+      end
+    end
+    puts "status is #{thread.status}"
+  end
+end
 
 def run_command cmd
   puts cmd
@@ -182,8 +204,8 @@ begin
     flags << "/loopUnroll:#{params[:unroll]}" if params[:unroll]
     flags << "/timeLimit:#{params[:time]}" if params[:time]
     warn "warning: only unrolling up to #{params[:unroll]}" if params[:unroll]
-    puts `#{echo} boogie #{flags * " "} #{params[:b]}`
-    raise "failed to process product program" unless $?.success?
+    run_command_with_heartbeat(30, "#{echo} boogie #{flags * " "} #{params[:b]}")
+    #raise "failed to process product program" unless $?.success?
   end
 
 rescue Interrupt
