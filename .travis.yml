@@ -42,4 +42,4 @@ install:
   - .travis/s2n_install_test_dependencies.sh
   
 script:
-  - travis_wait 40 .travis/s2n_travis_build.sh
+  - .travis/s2n_travis_build.sh
