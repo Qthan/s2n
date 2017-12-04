@@ -81,6 +81,8 @@ export PATH="${SMACK_DIR}/bin:${SMACK_DIR}/build:${PATH}"
 which smack || echo "can't find smack"
 which boogie || echo "can't find z3"
 which llvm2bpl || echo "can't find llvm2bpl"
+which clang
+clang --version
 
 
 #copy the current version of the file to the test
