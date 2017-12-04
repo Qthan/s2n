@@ -13,6 +13,9 @@
 # permissions and limitations under the License.
 #
 
+#see https://gist.github.com/letmaik/caa0f6cc4375cbfcc1ff26bd4530c2a3#file-travis_retry-sh
+#and https://github.com/travis-ci/travis-build/blob/1a3f336086d4c99fc9b11337ea1ff527e2f97a72/lib/travis/build/script/templates/header.sh
+
 travis_wait() {
   local cmd="$@"
   local log_file=travis_wait_$$.log
@@ -89,7 +92,7 @@ make clean
 FAILED=0
 EXPECTED_PASS=1
 EXPECTED_FAIL=0
-travis_wait make #2>&1 | ../../count_success.pl $EXPECTED_PASS $EXPECTED_FAIL || FAILED=1
+make #2>&1 | ../../count_success.pl $EXPECTED_PASS $EXPECTED_FAIL || FAILED=1
 
 if [ $FAILED == 1 ];
 then
