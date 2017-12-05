@@ -29,6 +29,7 @@ if (@ARGV != 2) {
 my $expected_success = shift;
 my $expected_failure = shift;
 my @undefined_functions = ();
+my %allowed_undefined = ("__CONTRACT_invariant" => 1);
 
 my $verified = 0;
 my $errors = 0;
@@ -36,9 +37,12 @@ while (my $line = <STDIN>){
     print $line;
     #Check if the code under test used unexpected functions
     if ($line =~ /warning: module contains undefined functions:([a-zA-Z0-9_, ]+)/) {
+	print "found undefined\n\n";
 	for my $fns (split(",",$1)){
 	    my $trimmed = trim ($fns);
-	    push @undefined_functions, $trimmed;
+	    unless ($allowed_undefined{$trimmed}) {
+		push @undefined_functions, $trimmed;
+	    }
 	}
     }
     
