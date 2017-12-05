@@ -11,7 +11,6 @@ def run_command_with_heartbeat (beat_time, cmd)
   puts "+ #{cmd}"
   Open3.popen3(cmd) do |stdin, stdout, stderr, thread|    
     loop do
-      STDERR.puts "#{(Time.now - start).round} seconds"
       begin
         Timeout::timeout(beat_time) {line = stdout.gets}
         break unless line
