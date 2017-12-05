@@ -19,7 +19,6 @@ def run_command_with_heartbeat (beat_time, cmd)
         STDERR.puts "+++++++ running for #{(Time.now - start).round} seconds"
       end
     end
-    puts "status is #{thread.status}"
   end
 end
 
