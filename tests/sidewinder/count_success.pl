@@ -22,7 +22,6 @@ use warnings;
 
 sub  trim { my $s = shift; $s =~ s/^\s+|\s+$//g; return $s };
 
-
 if (@ARGV != 2) {
     die "usage: count_success.pl expected_success expected_failures";
 }
