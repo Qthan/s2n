@@ -42,6 +42,8 @@ sudo apt-get update
 sudo apt-get install -y ${DEPENDENCIES}
 pip install pyyaml
 
+LLVM_SHORT_VERSION=3.9
+
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_SHORT_VERSION} 30
 sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_SHORT_VERSION} 30
 sudo update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-${LLVM_SHORT_VERSION} 30
