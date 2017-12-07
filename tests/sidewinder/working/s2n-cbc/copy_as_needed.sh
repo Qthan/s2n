@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x 
 BASEDIR=$(pwd)
 echo $BASEDIR
 S2N_BASE="$BASEDIR/../../../.."
@@ -9,6 +9,12 @@ cd $BASEDIR
 cp $S2N_BASE/crypto/s2n_hmac.c crypto/
 cp $S2N_BASE/crypto/s2n_hmac.h crypto
 patch -p5 <hmac.patch
+
+cd $BASEDIR
+rm -r api
+mkdir api
+cd api
+cp $S2N_BASE/api/s2n.h .
 
 exit 0
 
@@ -28,11 +34,7 @@ cp $S2N_BASE/tls/s2n_prf.h .
 cp $S2N_BASE/tls/s2n_tls_parameters.h .
 
 
-cd $BASEDIR
-rm -r api
-mkdir api
-cd api
-cp $S2N_BASE/api/s2n.h .
+
 
 cd $BASEDIR
 rm -r error
