@@ -25,6 +25,7 @@
 
 #include "tls/s2n_record.h"
 #include "tls/s2n_prf.h"
+#include "tls/s2n_connection.h"
 
 #include <smack.h>
 #include <smack-contracts.h>
@@ -68,10 +69,13 @@ int double_loop(int old_mismatches, struct s2n_blob *decrypted, int check, int c
  * complexity of attack for even a 1 microsecond timing leak (which
  * is quite large) by a factor of around 83 trillion.
  */
-int s2n_verify_cbc(
-		   struct s2n_hmac_state * copy, 
-		   //		   struct s2n_mode mode,
-		   struct s2n_hmac_state *hmac, struct s2n_blob *decrypted)
+
+int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, struct s2n_blob *decrypted)
+
+/* int s2n_verify_cbc( */
+/* 		   struct s2n_hmac_state * copy,  */
+/* 		   //		   struct s2n_mode mode, */
+/* 		   struct s2n_hmac_state *hmac, struct s2n_blob *decrypted) */
 {
     /* Set up MAC copy workspace */
     /* struct s2n_hmac_state *copy = &conn->client->record_mac_copy_workspace; */
@@ -79,6 +83,9 @@ int s2n_verify_cbc(
     /*    copy = &conn->server->record_mac_copy_workspace; */
     /* } */
 
+    struct s2n_hmac_state *copy = &conn->client->record_mac_copy_workspace;
+
+  
     uint8_t mac_digest_size = 20;
     //GUARD(s2n_hmac_digest_size(hmac->alg, &mac_digest_size));
 
@@ -175,7 +182,13 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
     .digest_pad = *digest_pad
   };
 
-  struct s2n_hmac_state hmac_copy;
+
+  struct s2n_crypto_parameters client;
+  struct s2n_connection conn = {
+    .client = &client
+  };
+  
+  //struct s2n_hmac_state hmac_copy;
 
   int data[MAX_SIZE];
   public_in(__SMACK_value(size));
@@ -189,5 +202,5 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
     .mlocked = mlocked
   };
 
-  return s2n_verify_cbc(&hmac_copy, &hmac, &decrypted);
+  return s2n_verify_cbc2(&conn, &hmac, &decrypted);
 }
