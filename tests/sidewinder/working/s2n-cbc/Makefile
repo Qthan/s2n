@@ -1,6 +1,7 @@
 include ../../lib/ct-verif.mk
 
 cflags +=-D__TIMING_CONTRACTS__
+cflags += -I$(CURDIR)
 cflags += -fPIC -std=c99 -fgnu89-inline
 extras += crypto/s2n_hmac.c  crypto/s2n_hash.c crypto/s2n_fips.c utils/s2n_safety.c
 goals  += simple_cbc_wrapper@cbc.c
