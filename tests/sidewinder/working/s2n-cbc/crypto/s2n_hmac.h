@@ -52,6 +52,7 @@ struct s2n_hmac_state {
     uint8_t digest_pad[SHA512_DIGEST_LENGTH];
 };
 
+struct s2n_hmac_evp_backup {};
 /* struct s2n_hmac_evp_backup { */
 /*     struct s2n_hash_evp_digest inner; */
 /*     struct s2n_hash_evp_digest inner_just_key; */
