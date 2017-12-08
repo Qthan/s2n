@@ -1,7 +1,12 @@
 include ../../lib/ct-verif.mk
 
 cflags +=-D__TIMING_CONTRACTS__
+#the overriden .h
 cflags += -I$(CURDIR)
+#original .h
+cflags += -I$(CURDIR)/../../../../
+#/api .h that haven't fixed that
+cflags += -I$(CURDIR)/../../../../api/
 cflags += -fPIC -std=c99 -fgnu89-inline
 extras += crypto/s2n_hmac.c  crypto/s2n_hash.c crypto/s2n_fips.c utils/s2n_safety.c
 goals  += simple_cbc_wrapper@cbc.c
