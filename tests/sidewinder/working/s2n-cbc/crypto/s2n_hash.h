@@ -4,6 +4,8 @@
 #include <openssl/sha.h>
 #include <openssl/md5.h>
 
+#include "crypto/s2n_evp.h"
+
 #define S2N_MAX_DIGEST_LEN SHA512_DIGEST_LENGTH
 
 typedef enum {
