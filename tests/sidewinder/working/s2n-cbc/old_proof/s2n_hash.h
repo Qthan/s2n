@@ -34,6 +34,8 @@ enum {
   LENGTH_FIELD_SIZE = 8     
 };
 
+#define MAX_SIZE 1024
+
 enum {
   SUCCESS = 0,
   FAILURE = -1
