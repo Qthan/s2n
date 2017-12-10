@@ -26,7 +26,6 @@ if [ "$#" -ne "1" ]; then
 fi
 
 INSTALL_DIR=$1
-export CTVERIF_DIR="${1}/verifying-constant-time"
 SMACK_DIR="${1}/smack"
 
 #Put the dependencies are on the path
@@ -43,9 +42,8 @@ which llvm2bpl || echo "can't find llvm2bpl"
 which clang
 clang --version
 
-#copy the current version of the file to the test
 cd "${BASE_S2N_DIR}/tests/sidewinder/working/s2n-cbc"
-#cp "${BASE_S2N_DIR}/utils/s2n_safety.c" .
+./copy_as_needed.sh
 make clean
 
 #run the test.  We expect both to pass, and none to fail
