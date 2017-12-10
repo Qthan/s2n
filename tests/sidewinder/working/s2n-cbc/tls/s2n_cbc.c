@@ -98,7 +98,7 @@ int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, st
     // LEAVE Out int check = MIN(255, (payload_and_padding_size - 1));
 
 
-    int check = payload_and_padding_size - 1;
+    int check = MIN(255,payload_and_padding_size - 1);
 
     int cutoff = check - padding_length;
     /* for (int i = 0, j = decrypted->size - 1 - check; i < check && j < decrypted->size; i++, j++) { */
