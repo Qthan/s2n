@@ -85,9 +85,9 @@ int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, st
     //__VERIFIER_assert(mac_digest_size <= sizeof(check_digest));
     lte_check(mac_digest_size, sizeof(check_digest));
     GUARD(s2n_hmac_digest_two_compression_rounds(hmac, check_digest, mac_digest_size));
-    GUARD(s2n_hmac_update(copy, decrypted->data + payload_length + mac_digest_size, decrypted->size - payload_length - mac_digest_size - 1));
     
     int mismatches = s2n_constant_time_equals(decrypted->data + payload_length, check_digest, mac_digest_size) ^ 1;
+    GUARD(s2n_hmac_update(copy, decrypted->data + payload_length + mac_digest_size, decrypted->size - payload_length - mac_digest_size - 1));
 
     /* SSLv3 doesn't specify what the padding should actually be */
     /* if (conn->actual_protocol_version == S2N_SSLv3) { */
