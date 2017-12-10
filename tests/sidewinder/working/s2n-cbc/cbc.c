@@ -68,7 +68,7 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
   struct s2n_crypto_parameters client;
   struct s2n_connection conn = {
     .client = &client,
-    .mode = S2N_CLIENT
+    .mode = S2N_SERVER
   };
   
   //struct s2n_hmac_state hmac_copy;
