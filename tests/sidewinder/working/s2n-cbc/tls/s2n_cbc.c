@@ -83,7 +83,7 @@ int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, st
     /* Check the MAC */
     uint8_t check_digest[S2N_MAX_DIGEST_LEN];
     //__VERIFIER_assert(mac_digest_size <= sizeof(check_digest));
-    //lte_check(mac_digest_size, sizeof(check_digest));
+    lte_check(mac_digest_size, sizeof(check_digest));
     GUARD(s2n_hmac_digest_two_compression_rounds(hmac, check_digest, mac_digest_size));
     GUARD(s2n_hmac_update(copy, decrypted->data + payload_length + mac_digest_size, decrypted->size - payload_length - mac_digest_size - 1));
     
