@@ -32,8 +32,6 @@
 #include "ct-verif.h"
 #include "sidewinder.h"
 
-int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, struct s2n_blob *decrypted);
-
 int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *xor_pad, int * digest_pad)
 {
 
@@ -85,5 +83,5 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
     .mlocked = mlocked
   };
 
-  return s2n_verify_cbc2(&conn, &hmac, &decrypted);
+  return s2n_verify_cbc(&conn, &hmac, &decrypted);
 }
