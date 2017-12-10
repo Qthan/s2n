@@ -108,10 +108,10 @@ int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, st
     /*   mismatches |= (decrypted->data[j] ^ padding_length) & mask; */
     /* } */
 
-    int mis = double_loop(mismatches, decrypted, check, cutoff, padding_length);
+    mismatches = double_loop(mismatches, decrypted, check, cutoff, padding_length);
     /* GUARD(s2n_hmac_reset(copy)); */
 
-     if (mis) {
+     if (mismatches) {
       S2N_ERROR(S2N_ERR_CBC_VERIFY);
     }
 
