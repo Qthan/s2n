@@ -60,7 +60,7 @@ extern inline void* trace_memcpy_check(void *restrict to, const void *restrict f
 
 /* Range check a number */
 #define gte_check(n, min)  do { if ( (n) < min ) { S2N_ERROR(S2N_ERR_SAFETY); } } while(0)
-#define lte_check(n, max)  do { if ( (n) > max ) { S2N_ERROR(S2N_ERR_SAFETY); } } while(0)
+#define lte_check(n, max)  __VERIFIER_assume( (n) <= max )
 #define gt_check(n, min)  __VERIFIER_assume( (n) > (min) )
 #define lt_check(n, max)  do { if ( (n) >= max ) { S2N_ERROR(S2N_ERR_SAFETY); } } while(0)
 #define eq_check(a, b)  do { if ( (a) != (b) ) { S2N_ERROR(S2N_ERR_SAFETY); } } while(0)
