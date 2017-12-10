@@ -16,6 +16,11 @@ patch -p5 <hmac.patch
 cp old_proof/s2n_hash.c crypto/
 cp old_proof/s2n_hash.h crypto/
 
+mkdir -p tls
+#add invariants etc needed for the proof to the s2n_cbc code
+cp $S2N_BASE/tls/s2n_cbc.c tls/
+patch -p5 < cbc.patch
+
 mkdir -p utils
 cp old_proof/s2n_safety.c utils/
 cp old_proof/s2n_safety.h utils/
