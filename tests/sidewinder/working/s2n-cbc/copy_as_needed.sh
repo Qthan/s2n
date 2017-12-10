@@ -6,41 +6,17 @@ S2N_BASE="$BASEDIR/../../../.."
 echo $S2N_BASE
 
 cd $BASEDIR
+mkdir -p crypto
+#The hmac should be based off the old hmac, so just apply the patches to add the invarients
 cp $S2N_BASE/crypto/s2n_hmac.c crypto/
-cp $S2N_BASE/crypto/s2n_hmac.h crypto
+cp $S2N_BASE/crypto/s2n_hmac.h crypto/
 patch -p5 <hmac.patch
 
-cd $BASEDIR
-rm -r api
-mkdir api
-cd api
-cp $S2N_BASE/api/s2n.h .
+#the hash uses my stubs for now, so replace the file
+cp old_proof/s2n_hash.c crypto/
+cp old_proof/s2n_hash.h crypto/
 
-exit 0
-
-cd $BASEDIR
-rm -r tls
-mkdir tls
-cd tls
-cp $S2N_BASE/tls/s2n_config.c .
-cp $S2N_BASE/tls/s2n_connection.c .
-cp $S2N_BASE/tls/s2n_crypto.h .
-cp $S2N_BASE/tls/s2n_prf.c .
-cp $S2N_BASE/tls/s2n_record.h .
-cp $S2N_BASE/tls/s2n_config.h .
-cp $S2N_BASE/tls/s2n_connection.h .
-cp $S2N_BASE/tls/s2n_handshake.h .
-cp $S2N_BASE/tls/s2n_prf.h .
-cp $S2N_BASE/tls/s2n_tls_parameters.h .
-
-
-
-
-cd $BASEDIR
-rm -r error
-mkdir error
-cd error
-cp $S2N_BASE/error/s2n_errno.c .
-cp $S2N_BASE/error/s2n_errno.h .
-
+mkdir -p utils
+cp old_proof/s2n_safety.c utils/
+cp old_proof/s2n_safety.h utils/
 
