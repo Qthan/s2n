@@ -31,7 +31,8 @@ enum {
   PER_BLOCK_COST = 1000,
   PER_BYTE_COST = 1,
   BLOCK_SIZE = 64,          
-  LENGTH_FIELD_SIZE = 8     
+  LENGTH_FIELD_SIZE = 8,
+  DIGEST_SIZE = 20
 };
 
 #define MAX_SIZE 1024

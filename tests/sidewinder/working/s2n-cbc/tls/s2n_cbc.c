@@ -44,31 +44,21 @@ int double_loop(int old_mismatches, struct s2n_blob *decrypted, int check, int c
 }
 
 int s2n_verify_cbc2(struct s2n_connection *conn, struct s2n_hmac_state *hmac, struct s2n_blob *decrypted)
-
-/* int s2n_verify_cbc( */
-/* 		   struct s2n_hmac_state * copy,  */
-/* 		   //		   struct s2n_mode mode, */
-/* 		   struct s2n_hmac_state *hmac, struct s2n_blob *decrypted) */
 {
     /* Set up MAC copy workspace */
-    /* struct s2n_hmac_state *copy = &conn->client->record_mac_copy_workspace; */
-    /* if (conn->mode == S2N_CLIENT) { */
-    /*    copy = &conn->server->record_mac_copy_workspace; */
-    /* } */
-
     struct s2n_hmac_state *copy = &conn->client->record_mac_copy_workspace;
     if (conn->mode == S2N_CLIENT) {
-       copy = &conn->server->record_mac_copy_workspace;
+      copy = &conn->server->record_mac_copy_workspace;
     }
 
-  
-    uint8_t mac_digest_size = 20;
+    //DSN - slows way down if I get this the other way
+    uint8_t mac_digest_size = DIGEST_SIZE;
     //GUARD(s2n_hmac_digest_size(hmac->alg, &mac_digest_size));
 
     /* The record has to be at least big enough to contain the MAC,
      * plus the padding length byte */
-    //gt_check(decrypted->size, mac_digest_size);
-    __VERIFIER_assume(decrypted->size > mac_digest_size);
+    gt_check(decrypted->size, mac_digest_size);
+    //__VERIFIER_assume(decrypted->size > mac_digest_size);
 
     __VERIFIER_assert(mac_digest_size == 20);
 
