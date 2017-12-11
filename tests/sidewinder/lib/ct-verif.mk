@@ -62,8 +62,8 @@ v = verified
 	@echo $*
 	@echo
 	@$(ctverif) $(flags) --no-compile --no-product $< | tee $*.log
-	@$(secure) || [ -z "$$(grep " 0 errors" $*.log)" ]
-	@not $(secure) || [ -n "$$(grep " 0 errors" $*.log)" ]
+#	@$(secure) || [ -z "$$(grep " 0 errors" $*.log)" ]
+#	@not $(secure) || [ -n "$$(grep " 0 errors" $*.log)" ]
 
 all: $$(patsubst %,%.$(v),$$(goals))
 
