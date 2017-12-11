@@ -23,6 +23,8 @@ patch -p5 < cbc.patch
 
 mkdir -p utils
 cp $S2N_BASE/utils/s2n_safety.c utils/
-cp old_proof/s2n_safety.h utils/
+cp $S2N_BASE/utils/s2n_safety.h utils/
+patch -p5 < safety.patch
+
 cp old_proof/s2n_annotations.h utils/
 
