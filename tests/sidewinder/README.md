@@ -4,12 +4,11 @@ This repository contains tests which ensure that key s2n functions
 are not susceptible to timing attacks.
 
 For more details, see https://github.com/awslabs/s2n/issues/463
-NOTE: Much of this information was discssed in greater detail in the [s2n blog post:](https://aws.amazon.com/blogs/security/s2n-and-lucky-13/)
 
 
 ## What are timing side channels
 
-Crypographic protocols such as TLS are supposed to keep secret information secret.
+Cryptographic protocols such as TLS are supposed to keep secret information secret.
 They do this by ensuring that WHICH bytes go over the wire is hidden using encryption.
 However, if the code is not carefully written, WHEN bytes go over the wire may depend
 on values that were supposed to remain secret.
@@ -32,21 +31,28 @@ is incorrect.  An attacker can simply guess
 until the time to receive the error message changes, and then they know the first letter in the password.
 Repeating for the remaining characters turns an exponential guessing challenge into a linear one.
 
-##Lucky 13: a quick recap
+A varient of this attack, called LUCKY13, has been demonstrated against some implementations the Cipher Block Chaining (CBC) mode of SSL/TLS. In this attack, the TLS server is tricked into treating a (secret) encrypted byte as a padding length field. A naive TLS implementation will remove the specified amount of padding, then calculate a hash on the remaining btyes in the packet. If the value in the secret byte was large, a small number of bytes will be hashed; if it was small, a larger number of bytes will be hashed, creating a timing difference, which in theory can reveal the value in the secret byte.
 
-In February 2013, Nadhem J. AlFardan and Kenny Paterson of the Information Security Group at Royal Holloway, University of London, published the Lucky 13 attack against TLS. Adam Langley’s blog post on the topic is a great detailed summary of the attack and how it operates and how It was mitigated In OpenSSL.
-
-A brief synopsis is that Lucky 13 is an “Active Person in the Middle” attack against block ciphers where an attacker who is already capable of intercepting and modifying your traffic may tamper with that traffic in ways that allow the attacker to determine which portions of your traffic are encrypted data, and which which portions of your traffic are padding (bytes included to round up to a certain block size).
-
-The attacker’s attempt to tamper with the traffic is detected by the design of the TLS protocol, and triggers an error message. The Lucky 13 research showed that receiving this error message can take a different amount of time depending on whether real data or padding was modified. That information can be combined with other cryptographic attacks to recover the original plaintext.
+For a detailed discussion of the LUCKY13 attack and how s2n mitigates against it, [see:](https://aws.amazon.com/blogs/security/s2n-and-lucky-13/). 
 
 ## s2n countermeasures against timing side channels
-s2n has included two different forms of mitigation against the Lucky 13 attack since release: first by minimizing the timing difference mentioned above, and second, by masking any difference by including a delay of up to 10 seconds whenever any error is triggered.  In particular,
-* s2n verifies CBC padding in constant time regardless of the amount of padding
-* s2n counts the number of bytes handled by HMAC and making this equal in all cases, a “close to constant time” technique that completely preserves the standard HMAC interface.
-* add a single new call that always performs two internal rounds of compression, even if one may not be necessary. This ensures that the same number of hash compression rounds always occur.
+
+s2n takes a belt and suspenders approach to preventing side-channel attacks.
+1. First of all, it uses code-balancing to ensure that the same number of hash compression rounds are processed, no matter the value in the secret byte.
+2. Second, it adds a delay of up to 10 seconds whenever any error is triggered, which increases by orders of magnitude the number of timing samples an attacker would need, even if they found a way around countermeasure 1. 
+
+## Why use formal methods to prove the correctness of s2n's countermeasures?
+Side channels are notoriously difficult to defend against, since code with a side-channel has the same functional behaviour as code that is side-channel free. Testing can find bugs, but it cannot prove their absence.  In order to prove the absence of a timing side-channel (up to a timing model of system execution), you need a formal proof.
+
+Formal proofs are also useful because they help prevent regressions.  If a code change causes a timing side-channel to be introduced, the proof will fail, and the developer will be notified before the bug goes to production.
 
 ## How does Sidewinder prove the correctness of code blinding countermeasures
+
+### High level overview
+A program has a timing side channel if the amount of time needed to execute it depends on the value of a secret input to the program. Sidewinder take a program, annotates every instuction with its runtime cost, and then generates a mathematical formula which symbolically represents the cost of executing the program given an input.  Sidewinder then asks an automated theorem prover, called a Satisfiability Modulo Theories (SMT) solver, if there is a pair of secret inputs to the program that would take different amounts of time to process.  The SMT solver, using clever heuristics, exhaustively searches the state of all possible program inputs, and either returns a proof that there is no timing side-channel, or an example of a pair of inputs that lead to a timing channel, along with the estimated leakage.
+
+### The gory details
+
 Mathematically, a program `P(secret, public)` has runtime `Time(P(secret,public))`. A program has a timing side-channel of delta if `|Time(P(secret_1,public)) - Time(P(secret_2,public))| = delta`.  If we can represent `Time(P(secret,public))` as a mathematical formula, we can use a theorem prover to mathematically prove that the timing leakage of the program, for all choices of `secret_1, secret_2`, is less than `delta`. 
 
 Sidewinder proceedes in several steps:
