@@ -33,7 +33,7 @@ Repeating for the remaining characters turns an exponential guessing challenge i
 
 A varient of this attack, called LUCKY13, has been demonstrated against some implementations the Cipher Block Chaining (CBC) mode of SSL/TLS. In this attack, the TLS server is tricked into treating a (secret) encrypted byte as a padding length field. A naive TLS implementation will remove the specified amount of padding, then calculate a hash on the remaining btyes in the packet. If the value in the secret byte was large, a small number of bytes will be hashed; if it was small, a larger number of bytes will be hashed, creating a timing difference, which in theory can reveal the value in the secret byte.
 
-For a detailed discussion of the LUCKY13 attack and how s2n mitigates against it, [see:](https://aws.amazon.com/blogs/security/s2n-and-lucky-13/). 
+For a detailed discussion of the LUCKY13 attack and how s2n mitigates against it, see [this blog post](https://aws.amazon.com/blogs/security/s2n-and-lucky-13/). 
 
 ## s2n countermeasures against timing side channels
 
