@@ -40,14 +40,6 @@ matrix:
   #This exception is because the test isn't finished yet, remove to turn on DRBG Saw tests
   - env: TESTS=sawDRBG                      SAW=true
   include:
-   - os : linux
-     env: TESTS=sidewinder
-     addons:
-       apt:
-         packages:
-           - clang-3.9
-           - llvm-3.9
-           - llvm-3.9-dev
   - os : linux
     env : TESTS=sawHMAC SAW_HMAC_TEST=md5    SAW=true GCC6_REQUIRED=false
     addons: &sawaddons
