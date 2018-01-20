@@ -13,7 +13,3 @@ ConfigurationNotChecked:*
 // cppcheck Message:  [tests/sidewinder/working/s2n-cbc/cbc.c:69]: (style:unassignedVariable) Variable 'data' is not assigned a value.
 // Reason: Value deliveratly left nondeterministic for sidewinder test purposes
 unassignedVariable:tests/sidewinder/working/s2n-cbc/cbc.c
-
-//  cppcheck Message:  [tests/sidewinder/working/s2n-cbc/stubs/s2n_hash.c:71]: (style:unsignedPositive) Unsigned variable 'size' can't be negative so it is unnecessary to test it.
-// Reason: Boogie uses unsigned integers, so the test is indeed necessary (for sidewinder purposes)
-unsignedPositive:tests/sidewinder/working/s2n-cbc/stubs/s2n_hash.c

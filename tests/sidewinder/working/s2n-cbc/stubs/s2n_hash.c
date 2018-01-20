@@ -71,7 +71,7 @@ int num_blocks(int numBytes) {
   if (numBytes < 15*BLOCK_SIZE) return 14;
   if (numBytes < 16*BLOCK_SIZE) return 15;
   if (numBytes < 17*BLOCK_SIZE) return 16;
-  if (numBytes == 1088) return 17;
+  if (numBytes == 17*BLOCK_SIZE) return 17;
   __VERIFIER_assert(numBytes <= 1088);
   //return -1;
 }
@@ -82,9 +82,9 @@ int s2n_hash_update(struct s2n_hash_state *state, const void *data, uint32_t siz
   /* The __VERIFIER_assert statements give better performance but don't add to our current spec.
    *  The proof should hold in their absense.
    */
-
+  //cppcheck-suppress unsignedPositive
    __VERIFIER_assert(size >= 0);
-   __VERIFIER_assert(size <= 1024);
+   __VERIFIER_assert(size <= MAX_SIZE);
    __VERIFIER_assert(state->currently_in_hash_block < BLOCK_SIZE);
    __VERIFIER_ASSUME_LEAKAGE(PER_BYTE_COST * size);
 
