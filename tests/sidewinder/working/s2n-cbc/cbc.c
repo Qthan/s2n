@@ -63,9 +63,10 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
     .client = &client,
     .mode = S2N_SERVER
   };
-  
-  //struct s2n_hmac_state hmac_copy;
 
+  // Data represents the decrypted data handed to the process.  Intentionally left non-deterministic
+  // for proof purposes.
+  // cppcheck-suppress unassignedVariable
   int data[MAX_SIZE];
   public_in(__SMACK_value(size));
   __VERIFIER_assume(size >= 0);
