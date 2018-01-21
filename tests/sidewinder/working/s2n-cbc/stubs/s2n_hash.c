@@ -26,8 +26,7 @@ int s2n_hash_digest_size(s2n_hash_algorithm alg, uint8_t *out)
     switch (alg) {
     case S2N_HASH_NONE:     *out = 0;                    break;
     case S2N_HASH_MD5:      *out = MD5_DIGEST_LENGTH;    break;
-    case S2N_HASH_SHA1:     *out = 20;    break;
-      //    case S2N_HASH_SHA1:     *out = SHA_DIGEST_LENGTH;    break;
+    case S2N_HASH_SHA1:     *out = SHA_DIGEST_LENGTH;    break;
     case S2N_HASH_SHA224:   *out = SHA224_DIGEST_LENGTH; break;
     case S2N_HASH_SHA256:   *out = SHA256_DIGEST_LENGTH; break;
     case S2N_HASH_SHA384:   *out = SHA384_DIGEST_LENGTH; break;
@@ -73,7 +72,6 @@ int num_blocks(int numBytes) {
   if (numBytes < 17*BLOCK_SIZE) return 16;
   if (numBytes == 17*BLOCK_SIZE) return 17;
   __VERIFIER_assert(numBytes <= 1088);
-  //return -1;
 }
 
 int s2n_hash_update(struct s2n_hash_state *state, const void *data, uint32_t size)
