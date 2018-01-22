@@ -71,8 +71,8 @@ int simple_cbc_wrapper(int currently_in_hash_block, int mlocked, int size, int *
 
   /* Data represents the decrypted data handed to the process.
    * Intentionally left non-deterministic so that the proof can handle all possible values in the buffer
-   * cppcheck-suppress unassignedVariable
    */
+   //cppcheck-suppress unassignedVariable
   int data[MAX_SIZE];
   public_in(__SMACK_value(size));
   __VERIFIER_assume(size >= 0);
